@@ -1,0 +1,39 @@
+<head>
+	library here
+</head>
+
+<div class="row">
+        <h2>AUTOCOMPLETE DEMO</h2>
+</div>
+<input  type="text" id="txt-itemname"/>
+
+<script>
+
+$('#txt-itemname').autocomplete({
+                source: function (parameter, result) {
+                    var param = parameter.term.toUpperCase().replace("'", "''");
+                    $.ajax({
+                        url: "/Home/AUTOCOMPLETE",
+                        type: "post",
+                        dataType: "json",
+                        data: {
+                            itemname: param,
+                        },
+                        async: false,
+                        cache:false,
+                        success: function (data) {
+                            result($.map(data, function (item) {
+                                return {
+                                    label: item.ItemName,
+                                    value: item.ItemName
+                                };
+                            }))
+                        },
+                        error: function (err) {
+                            alert(err);
+                        },
+                    });
+                }
+            });
+
+</script>

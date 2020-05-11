@@ -1,0 +1,29 @@
+public ActionResult AUTOCOMPLETE(string itemname)
+        {
+            SqlConnection cn = new SqlConnection(HPCOMMON);
+            cn.Open();
+
+            List<ItemMaster> Sysdata = new List<ItemMaster>();
+
+            str = "SELECT top 2 ItemCode,ItemName " +
+                  "FROM HPCOMMON..Item_Master (NOLOCK) " +
+                  "WHERE ItemName like '%" + itemname + "%' ";
+            cmd = new SqlCommand(str, cn);
+            cmd.CommandTimeout = 0;
+            dt.Load(cmd.ExecuteReader());
+            if (dt.Rows.Count > 0)
+            {
+                for (var i = 0; i < dt.Rows.Count; i++)
+                {
+                    Sysdata.Add(new ItemMaster
+                    {
+                        ItemCode = dt.Rows[i]["ItemCode"].ToString(),
+                        ItemName = dt.Rows[i]["ItemName"].ToString(),
+                        //ImagePath = dt.Rows[i]["ImagePath"].ToString(),
+                    });
+                }
+            }
+            cmd.Dispose();
+            cn.Dispose();
+            return Json(Sysdata, JsonRequestBehavior.AllowGet);
+        }
